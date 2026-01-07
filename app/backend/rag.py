@@ -12,6 +12,41 @@ from typing import Tuple, List
 # Atlas 대시보드에서 생성한 Search Index의 이름과 일치해야 합니다.
 INDEX_NAME = "vector_index" 
 
+from langchain_core.documents import Document
+
+def ingest_text(text: str) -> int:
+    """
+    텍스트를 직접 입력받아 청킹(Chunking) 후 MongoDB에 벡터로 저장합니다.
+    
+    Args:
+        text (str): 사용자가 입력한 텍스트
+        
+    Returns:
+        int: 저장된 문서 청크(Chunk)의 개수
+    """
+    # 1. 텍스트를 Document 객체로 변환
+    docs = [Document(page_content=text, metadata={"source": "User Input"})]
+
+    # 2. 텍스트 분할 (Split)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200
+    )
+    splits = text_splitter.split_documents(docs)
+
+    # 3. 임베딩 및 저장 (Embed & Store)
+    collection = get_vector_collection()
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    
+    vector_store = MongoDBAtlasVectorSearch(
+        collection=collection,
+        embedding=embeddings,
+        index_name=INDEX_NAME
+    )
+    vector_store.add_documents(splits)
+    
+    return len(splits)
+
 def ingest_pdf(file_path: str) -> int:
     """
     PDF 파일을 로드하고, 텍스트를 청크(Chunk)로 분할하여 MongoDB에 벡터로 저장합니다.

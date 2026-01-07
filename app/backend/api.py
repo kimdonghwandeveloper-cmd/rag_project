@@ -66,6 +66,31 @@ async def upload_file(file: UploadFile = File(...)):
         # 상세 에러 메시지를 포함하여 500 에러 반환
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
+class TextRequest(BaseModel):
+    text: str
+
+@router.post("/upload/text")
+async def upload_text(request: TextRequest):
+    """
+    [POST] /upload/text
+    텍스트를 직접 입력받아 RAG 시스템에 지식을 추가합니다.
+    
+    Args:
+        request: 텍스트 내용이 담긴 요청 객체
+        
+    Returns:
+        JSON: 처리 결과 메세지와 추가된 청크 개수
+    """
+    try:
+        from app.backend.rag import ingest_text
+        num_chunks = ingest_text(request.text)
+        return {"message": "Successfully processed text input", "chunks_added": num_chunks}
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Text update failed: {error_details}")
+        raise HTTPException(status_code=500, detail=f"Text upload failed: {str(e)}")
+
 @router.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     """
