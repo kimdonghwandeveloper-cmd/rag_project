@@ -1,9 +1,9 @@
-import streamlit as st
 import requests
 import os
 
 # 백엔드 API 기본 주소
-API_URL = "http://localhost:8000"
+# Docker 환경에서는 환경 변수에서 URL을 가져옵니다.
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 # --- 페이지 설정 ---
 st.set_page_config(
