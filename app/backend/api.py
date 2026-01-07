@@ -57,8 +57,14 @@ async def upload_file(file: UploadFile = File(...)):
         # 오류 발생 시 로컬에 저장된 임시 파일 삭제
         if os.path.exists(file_path):
             os.remove(file_path)
+            
+        # 에러 로그 출력 (구체적인 원인 파악용)
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Update failed: {error_details}")
+        
         # 상세 에러 메시지를 포함하여 500 에러 반환
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 @router.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):

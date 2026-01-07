@@ -61,8 +61,8 @@ def get_answer(query: str, use_rag: bool = True) -> Tuple[str, List[str]]:
     Returns:
         Tuple[str, List[str]]: (답변 텍스트, 참고한 소스 목록)
     """
-    # GPT-4 모델 초기화 (온도는 0으로 설정하여 일관된 답변 유도)
-    llm = ChatOpenAI(model="gpt-4", temperature=0)
+    # GPT-3.5-turbo 모델 초기화 (비용 절감 및 무료 티어 호환)
+    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
     
     if use_rag:
         # === RAG 파이프라인 (검색 + 생성) ===
