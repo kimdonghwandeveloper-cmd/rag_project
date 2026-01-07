@@ -1,0 +1,28 @@
+[project]
+name = "rag-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "김동환", email = "kimdonghwandeveloper@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.128.0",
+    "httpx>=0.28.1",
+    "langchain-community>=0.4.1",
+    "langchain-mongodb>=0.10.0",
+    "langchain-openai>=1.1.6",
+    "pymongo>=4.15.5",
+    "pypdf>=6.5.0",
+    "python-dotenv>=1.2.1",
+    "streamlit>=1.52.2",
+    "uvicorn>=0.40.0",
+]
+
+[project.scripts]
+rag-project = "rag_project:main"
+
+[build-system]
+requires = ["uv_build>=0.9.18,<0.10.0"]
+build-backend = "uv_build"
